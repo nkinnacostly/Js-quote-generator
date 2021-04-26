@@ -1,18 +1,31 @@
-const quoteContainer = document.getElementById('qoute-container');
+const quoteContainer = document.getElementById('quote-container')
 const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
 const twitterBtn = document.getElementById('twitter');
 const newQuoteBtn = document.getElementById('new-quote');
+const loader = document.getElementById('loader');
 
 
 
+// Show Loader
+function loading (){
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+    // quoteText.hidden = true;
+    // authorText.hidden = true;
+}
 
-
-// Get quote from API
-
-
-async function getQUote(){
+// Hide Loader
+function showQuote () {
+    if(!loader.hidden){
+        quoteContainer.hidden = false;
+         loader.hidden = true;
+    }
     
+}
+// Get quote from API
+async function getQUote(){
+    loading ();
     const apiUrl = 'https://andruxnet-random-famous-quotes.p.rapidapi.com/';
     try{
         const response = await fetch(apiUrl, {
@@ -22,7 +35,7 @@ async function getQUote(){
 	"useQueryString": true}
 });
         const data = await response.json();
-        // If author is bland, add "Unkown"
+        // If author is blank, add "Unkown"
         if(data[0].author === ''){
             authorText.innerText = 'Unknown'
         } else{
@@ -34,6 +47,8 @@ async function getQUote(){
             quoteText.classList.remove('long-quote');
         }
         quoteText.innerHTML = data[0].quote;
+        // Stop Loader Show quote
+        showQuote();
         
     }catch(error){
         getQUote()
@@ -57,4 +72,4 @@ twitterBtn.addEventListener('click', tweetQuote);
 
 
 // On Load
-getQUote();
+getQUote(); 
